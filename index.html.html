@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5-mavzu: Ratsional sonlar</title>
+
+<!-- KaTeX for math rendering -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {delimiters: [{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false});"></script>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --primary: #6B2FB3;
+    --primary-dark: #4A1F80;
+    --primary-light: #9B6BE0;
+    --primary-soft: #F4EEFF;
+    --accent: #FFB627;
+    --success: #16A34A;
+    --success-soft: #DCFCE7;
+    --error: #DC2626;
+    --error-soft: #FEE2E2;
+    --text: #1A1325;
+    --text-muted: #6B6478;
+    --bg: #FAF8FF;
+    --card: #FFFFFF;
+    --border: #ECE7F5;
+    --shadow: 0 4px 24px rgba(107, 47, 179, 0.08);
+    --shadow-lg: 0 12px 48px rgba(107, 47, 179, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { 
+    height: 100%;
+    font-family: 'Manrope', -apple-system, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background: 
+      radial-gradient(circle at 10% 0%, rgba(155, 107, 224, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 90% 100%, rgba(255, 182, 39, 0.08) 0%, transparent 50%),
+      var(--bg);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+  }
+
+  /* ===== Header ===== */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding: 16px 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--primary);
+    letter-spacing: -0.02em;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--primary);
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(107, 47, 179, 0.3);
+  }
+
+  .header-badge {
+    background: var(--primary-soft);
+    color: var(--primary);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* ===== Title block ===== */
+  .title-block {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .topic-label {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 20px rgba(107, 47, 179, 0.25);
+  }
+
+  .title-block h1 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .title-block .subtitle {
+    color: var(--text-muted);
+    font-size: 16px;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* ===== Screens ===== */
+  .screen { display: none; animation: fadeUp 0.4s ease both; }
+  .screen.active { display: block; }
+
+  /* ===== Variant cards ===== */
+  .variants {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .variant-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 24px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(.2,.9,.2,1);
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+    font-family: inherit;
+  }
+
+  .variant-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--card-gradient);
+    opacity: 0;
+    transition: opacity 0.25s;
+    z-index: 0;
+  }
+
+  .variant-card > * { position: relative; z-index: 1; }
+
+  .variant-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--card-color);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .variant-card:hover::before { opacity: 0.05; }
+
+  .variant-card[data-level="1"] { --card-color: #16A34A; --card-gradient: #16A34A; }
+  .variant-card[data-level="2"] { --card-color: #F59E0B; --card-gradient: #F59E0B; }
+  .variant-card[data-level="3"] { --card-color: #DC2626; --card-gradient: #DC2626; }
+
+  .variant-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--card-color);
+    color: white;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .variant-card h3 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+
+  .variant-card .level-tag {
+    display: inline-block;
+    background: var(--card-color);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .variant-card p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .variant-card .meta {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .variant-card .meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* ===== Quiz screen ===== */
+  .quiz-header {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 20px 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .quiz-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .quiz-level-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+  }
+
+  .quiz-info-text h3 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .quiz-info-text p {
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  .progress-text {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 14px;
+    background: var(--primary-soft);
+    padding: 6px 14px;
+    border-radius: 999px;
+  }
+
+  .progress-bar {
+    height: 8px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: 999px;
+    transition: width 0.4s cubic-bezier(.2,.9,.2,1);
+    width: 0%;
+  }
+
+  .question-card {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+
+  .q-number {
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .q-text {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: clamp(20px, 3vw, 26px);
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+    color: var(--text);
+  }
+
+  .options {
+    display: grid;
+    gap: 12px;
+  }
+
+  .option {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: inherit;
+    font-size: 17px;
+    text-align: left;
+    color: var(--text);
+    width: 100%;
+  }
+
+  .option:hover:not(:disabled) {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    transform: translateX(2px);
+  }
+
+  .option:disabled { cursor: default; }
+
+  .option-letter {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 15px;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .option:hover:not(:disabled) .option-letter {
+    background: var(--primary);
+    color: white;
+  }
+
+  .option-text { flex: 1; }
+
+  .option.correct {
+    border-color: var(--success);
+    background: var(--success-soft);
+  }
+  .option.correct .option-letter {
+    background: var(--success);
+    color: white;
+  }
+
+  .option.wrong {
+    border-color: var(--error);
+    background: var(--error-soft);
+  }
+  .option.wrong .option-letter {
+    background: var(--error);
+    color: white;
+  }
+
+  .option .option-mark {
+    margin-left: auto;
+    font-size: 22px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .option.correct .option-mark, .option.wrong .option-mark { opacity: 1; }
+
+  .feedback {
+    margin-top: 20px;
+    padding: 16px 20px;
+    border-radius: 14px;
+    font-size: 15px;
+    display: none;
+    animation: fadeUp 0.3s ease both;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: var(--success-soft); color: #14532D; border-left: 4px solid var(--success); }
+  .feedback.wrong { background: var(--error-soft); color: #7F1D1D; border-left: 4px solid var(--error); }
+  .feedback strong { display: block; margin-bottom: 4px; font-family: 'Bricolage Grotesque', sans-serif; }
+
+  /* ===== Buttons ===== */
+  .controls {
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .btn {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-size: 15px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 8px 20px rgba(107, 47, 179, 0.25);
+  }
+  .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 12px 28px rgba(107, 47, 179, 0.35); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+  }
+  .btn-ghost:hover { color: var(--primary); background: var(--primary-soft); }
+
+  /* ===== Result screen ===== */
+  .result-card {
+    background: var(--card);
+    border-radius: 28px;
+    padding: 48px 32px;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .result-card::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 200px;
+    background: radial-gradient(ellipse, rgba(107, 47, 179, 0.15), transparent 70%);
+    pointer-events: none;
+  }
+
+  .result-icon {
+    font-size: 72px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .score-display {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+
+  .score-display .total { color: var(--text-muted); -webkit-text-fill-color: var(--text-muted); font-size: 36px; }
+
+  .result-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .result-message {
+    color: var(--text-muted);
+    font-size: 16px;
+    margin-bottom: 32px;
+  }
+
+  .result-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .stat {
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 16px 8px;
+  }
+
+  .stat-num {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .stat-num.success { color: var(--success); }
+  .stat-num.error { color: var(--error); }
+  .stat-num.primary { color: var(--primary); }
+
+  .result-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ===== Review screen ===== */
+  .review-list { display: grid; gap: 12px; margin-top: 24px; }
+
+  .review-item {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 20px;
+    border-left: 4px solid var(--success);
+    box-shadow: var(--shadow);
+  }
+  .review-item.wrong { border-left-color: var(--error); }
+
+  .review-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .review-item-num {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 14px;
+  }
+
+  .review-item-status {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .review-item-status.correct { background: var(--success-soft); color: var(--success); }
+  .review-item-status.wrong { background: var(--error-soft); color: var(--error); }
+
+  .review-item-q { font-size: 15px; margin-bottom: 8px; line-height: 1.5; }
+  .review-item-a { font-size: 14px; color: var(--text-muted); }
+  .review-item-a strong { color: var(--text); }
+
+  /* ===== Animations ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.8); opacity: 0; }
+    60% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .pop { animation: pop 0.4s cubic-bezier(.2,.9,.2,1) both; }
+
+  /* ===== Footer ===== */
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .container { padding: 16px 14px 60px; }
+    .question-card { padding: 24px 20px; border-radius: 20px; }
+    .result-card { padding: 36px 20px; }
+    .score-display { font-size: 56px; }
+    .score-display .total { font-size: 28px; }
+    .controls { flex-direction: column-reverse; align-items: stretch; }
+    .controls .btn { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header">
+  </header>
+
+  <!-- TITLE -->
+  <div class="title-block">
+    <span class="topic-label">📘 5-mavzu</span>
+    <h1>Ratsional sonlar</h1>
+    <p class="subtitle">Bilimingizni sinab ko'ring — uchta darajadagi testlar orqali mavzuni mustahkamlang.</p>
+  </div>
+
+  <!-- SCREEN 1: Variant tanlash -->
+  <div class="screen active" id="screen-start">
+    <div class="variants">
+      <button class="variant-card" data-level="1" onclick="startQuiz(1)">
+        <div class="variant-num">1</div>
+        <span class="level-tag">Oson</span>
+        <h3>1-variant</h3>
+        <div class="meta">
+          <span>📝 10 ta savol</span>
+          <span>⏱ ~10 daq</span>
+        </div>
+      </button>
+
+      <button class="variant-card" data-level="2" onclick="startQuiz(2)">
+        <div class="variant-num">2</div>
+        <span class="level-tag">O'rtacha</span>
+        <h3>2-variant</h3>
+        <div class="meta">
+          <span>📝 10 ta savol</span>
+          <span>⏱ ~15 daq</span>
+        </div>
+      </button>
+
+      <button class="variant-card" data-level="3" onclick="startQuiz(3)">
+        <div class="variant-num">3</div>
+        <span class="level-tag">Qiyin</span>
+        <h3>3-variant</h3>
+        <div class="meta">
+          <span>📝 10 ta savol</span>
+          <span>⏱ ~20 daq</span>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: Quiz -->
+  <div class="screen" id="screen-quiz">
+    <div class="quiz-header">
+      <div class="quiz-info">
+        <div class="quiz-level-badge" id="levelBadge">1</div>
+        <div class="quiz-info-text">
+          <h3 id="levelTitle">1-variant • Oson</h3>
+          <p>Ratsional sonlar</p>
+        </div>
+      </div>
+      <div class="progress-text" id="progressText">1 / 10</div>
+    </div>
+
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+    <div class="question-card" id="questionCard">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-ghost" onclick="exitQuiz()">← Variantlarga</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Keyingi savol →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: Result -->
+  <div class="screen" id="screen-result">
+    <div class="result-card">
+      <div class="result-icon" id="resultIcon">🎯</div>
+      <div class="score-display"><span id="finalScore">0</span><span class="total">/10</span></div>
+      <h2 class="result-title" id="resultTitle">Natija tayyor!</h2>
+      <p class="result-message" id="resultMessage">Test yakunlandi.</p>
+
+      <div class="result-stats">
+        <div class="stat">
+          <div class="stat-num success" id="statCorrect">0</div>
+          <div class="stat-label">To'g'ri</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num error" id="statWrong">0</div>
+          <div class="stat-label">Xato</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num primary" id="statPercent">0%</div>
+          <div class="stat-label">Foiz</div>
+        </div>
+      </div>
+
+      <div class="result-actions">
+        <button class="btn btn-ghost" onclick="showReview()">Javoblarni ko'rish</button>
+        <button class="btn btn-primary" onclick="exitQuiz()">Boshqa variant tanlash</button>
+      </div>
+    </div>
+
+    <div id="reviewSection" style="display:none;">
+      <div class="review-list" id="reviewList"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    Matematika · 5-mavzu
+  </footer>
+
+</div>
+
+<script>
+// ============================================================
+// SAVOLLAR BAZASI
+// ============================================================
+const QUIZZES = {
+  1: {
+    title: "1-variant • Oson",
+    questions: [
+      {
+        q: "Quyidagilardan qaysi biri $\\mathbb{Z}$ (butun sonlar) to'plamiga tegishli?",
+        options: ["$\\dfrac{1}{2}$", "$0{,}3$", "$-15$", "$\\dfrac{3}{7}$"],
+        correct: 2,
+        explain: "Butun sonlar $(\\mathbb{Z})$: $\\ldots, -2, -1, 0, 1, 2, \\ldots$ — $-15$ butun son. Boshqalari oddiy yoki o'nli kasrlar."
+      },
+      {
+        q: "$|-9|$ ning qiymati nechaga teng?",
+        options: ["$-9$", "$9$", "$0$", "$\\dfrac{1}{9}$"],
+        correct: 1,
+        explain: "Modul — sondan nolgacha bo'lgan masofa. Masofa hech qachon manfiy bo'lmaydi: $|-9| = 9$."
+      },
+      {
+        q: "$-12$ sonining qarama-qarshisi qaysi?",
+        options: ["$-12$", "$12$", "$-\\dfrac{1}{12}$", "$\\dfrac{1}{12}$"],
+        correct: 1,
+        explain: "Qarama-qarshi son — ishorasi qarama-qarshi son. $-12$ ning qarama-qarshisi $= 12$. Tekshirish: $-12 + 12 = 0$ ✓"
+      },
+      {
+        q: "Hisoblang: $-5 + 8$",
+        options: ["$-13$", "$13$", "$-3$", "$3$"],
+        correct: 3,
+        explain: "Har xil ishorali sonlar: katta moduldan kichigi ayriladi: $8 - 5 = 3$. Moduli katta son ($+8$) — musbat, demak natija $+3$."
+      },
+      {
+        q: "Hisoblang: $-7 - 4$",
+        options: ["$-11$", "$-3$", "$3$", "$11$"],
+        correct: 0,
+        explain: "$-7 - 4 = -7 + (-4)$. Ikkalasi manfiy: modullari qo'shiladi ($7+4=11$), ishora manfiy. Javob: $-11$."
+      },
+      {
+        q: "Hisoblang: $(-3) \\cdot 5$",
+        options: ["$-15$", "$15$", "$-8$", "$8$"],
+        correct: 0,
+        explain: "Har xil ishora — natija manfiy. $3 \\cdot 5 = 15$, ishora $-$: $\\boxed{-15}$."
+      },
+      {
+        q: "Hisoblang: $(-20) : 4$",
+        options: ["$-5$", "$5$", "$-16$", "$16$"],
+        correct: 0,
+        explain: "Har xil ishora — natija manfiy. $20 : 4 = 5$, ishora $-$: $\\boxed{-5}$."
+      },
+      {
+        q: "$-(-4)$ qanchaga teng?",
+        options: ["$-8$", "$-4$", "$0$", "$4$"],
+        correct: 3,
+        explain: "Manfiy sonning qarama-qarshisi musbat: $-(-4) = +4$. \"Ikki minus — bitta plyus!\""
+      },
+      {
+        q: "Son o'qida $A(-2)$ va $B(5)$ nuqtalar orasidagi masofa qancha?",
+        options: ["$3$", "$7$", "$-7$", "$10$"],
+        correct: 1,
+        explain: "Masofa formulasi: $d(A;B) = |a - b| = |-2 - 5| = |-7| = 7$. Masofa har doim musbat!"
+      },
+      {
+        q: "$1 : 1000$ masshtabli xaritada $3$ sm haqiqatda necha metr?",
+        options: ["$3$ m", "$30$ m", "$300$ m", "$3000$ m"],
+        correct: 1,
+        explain: "Haqiqiy uzunlik $= 3 \\cdot 1000 = 3000$ sm $= 30$ m."
+      }
+    ]
+  },
+
+  2: {
+    title: "2-variant • O'rtacha",
+    questions: [
+      {
+        q: "$|3 - 8| + |-2|$ ning qiymati nechaga teng?",
+        options: ["$-3$", "$3$", "$7$", "$-7$"],
+        correct: 2,
+        explain: "Avval qavs: $|3-8| = |-5| = 5$. Keyin $|-2| = 2$. Yig'indi: $5 + 2 = 7$."
+      },
+      {
+        q: "Hisoblang: $-15 + (-7) + 12$",
+        options: ["$-10$", "$10$", "$-34$", "$20$"],
+        correct: 0,
+        explain: "Chapdan o'ngga: $-15 + (-7) = -22$. So'ng $-22 + 12 = -10$ (har xil ishora, $22-12=10$, manfiy moduli katta)."
+      },
+      {
+        q: "Hisoblang: $-3 - (-5) - 8$",
+        options: ["$-16$", "$-6$", "$0$", "$10$"],
+        correct: 1,
+        explain: "Ikki minus — plyus: $-3 + 5 - 8 = 2 - 8 = -6$."
+      },
+      {
+        q: "Hisoblang: $(-2) \\cdot (-3) \\cdot (-4)$",
+        options: ["$24$", "$-24$", "$9$", "$-9$"],
+        correct: 1,
+        explain: "$3$ ta manfiy ko'paytuvchi — toq, demak natija manfiy. $2 \\cdot 3 \\cdot 4 = 24$, ishora $-$: $-24$."
+      },
+      {
+        q: "Hisoblang: $-3 \\cdot 4 + (-2) \\cdot 5$",
+        options: ["$-22$", "$-2$", "$2$", "$22$"],
+        correct: 0,
+        explain: "Avval ko'paytirish: $-3 \\cdot 4 = -12$, $(-2) \\cdot 5 = -10$. So'ng qo'shish: $-12 + (-10) = -22$."
+      },
+      {
+        q: "Hisoblang: $-\\dfrac{3}{4} + \\dfrac{1}{2}$",
+        options: ["$-\\dfrac{1}{4}$", "$\\dfrac{1}{4}$", "$-\\dfrac{5}{4}$", "$-1$"],
+        correct: 0,
+        explain: "Umumiy maxraj $4$: $-\\dfrac{3}{4} + \\dfrac{2}{4} = -\\dfrac{1}{4}$ (manfiy moduli katta)."
+      },
+      {
+        q: "Hisoblang: $-1{,}5 \\cdot 0{,}4$",
+        options: ["$-0{,}6$", "$0{,}6$", "$-6$", "$6$"],
+        correct: 0,
+        explain: "Har xil ishora — manfiy. $1{,}5 \\cdot 0{,}4 = 0{,}6$, ishora $-$: $-0{,}6$."
+      },
+      {
+        q: "Hisoblang: $(-15) : (-3) - 4$",
+        options: ["$-1$", "$1$", "$-9$", "$9$"],
+        correct: 1,
+        explain: "Avval bo'lish: $(-15):(-3) = 5$ (bir xil ishora — musbat). So'ng $5 - 4 = 1$."
+      },
+      {
+        q: "Son o'qida $M(-4)$ nuqta chapga $7$ birlik siljitildi. Yangi nuqtaning koordinatasini toping.",
+        options: ["$3$", "$-11$", "$-3$", "$11$"],
+        correct: 1,
+        explain: "Chapga siljitish — koordinatadan ayirish: $-4 - 7 = -11$."
+      },
+      {
+        q: "Maktab maydonining uzunligi $120$ m. $1 : 600$ masshtabli planda uning uzunligi necha sm bo'ladi?",
+        options: ["$5$ sm", "$20$ sm", "$50$ sm", "$200$ sm"],
+        correct: 1,
+        explain: "$120$ m $= 12\\,000$ sm. Plandagi uzunlik $= 12\\,000 : 600 = 20$ sm."
+      }
+    ]
+  },
+
+  3: {
+    title: "3-variant • Qiyin",
+    questions: [
+      {
+        q: "$|x| = 7$ tenglamani qanoatlantiruvchi $x$ qiymatlarining yig'indisi nechaga teng?",
+        options: ["$0$", "$7$", "$14$", "$-14$"],
+        correct: 0,
+        explain: "Modul tenglamasi: $x = 7$ yoki $x = -7$. Yig'indi: $7 + (-7) = 0$ (qarama-qarshi sonlar yig'indisi)."
+      },
+      {
+        q: "Hisoblang: $(-2)^3 + (-3)^2$",
+        options: ["$-1$", "$1$", "$17$", "$-17$"],
+        correct: 1,
+        explain: "$(-2)^3 = (-2)\\cdot(-2)\\cdot(-2) = -8$ ($3$ ta manfiy — toq). $(-3)^2 = 9$ ($2$ ta manfiy — juft). $-8 + 9 = 1$."
+      },
+      {
+        q: "Hisoblang: $\\dfrac{-7 + (-3) \\cdot 2}{-(-2)}$",
+        options: ["$-6{,}5$", "$6{,}5$", "$-\\dfrac{1}{2}$", "$\\dfrac{1}{2}$"],
+        correct: 0,
+        explain: "Surat: $-7 + (-6) = -13$. Maxraj: $-(-2) = 2$. Bo'linma: $-13 : 2 = -6{,}5$."
+      },
+      {
+        q: "Hisoblang: $-3 \\cdot (5 - 8) + (-2)^2 \\cdot 3$",
+        options: ["$-21$", "$-3$", "$3$", "$21$"],
+        correct: 3,
+        explain: "Avval qavs: $5-8 = -3$. Daraja: $(-2)^2 = 4$. So'ng: $-3 \\cdot (-3) + 4 \\cdot 3 = 9 + 12 = 21$."
+      },
+      {
+        q: "$|-7| \\cdot |2 - 9| - |-5|$ ning qiymati nechaga teng?",
+        options: ["$-44$", "$44$", "$-19$", "$19$"],
+        correct: 1,
+        explain: "$|-7| = 7$; $|2-9| = |-7| = 7$; $|-5| = 5$. Demak: $7 \\cdot 7 - 5 = 49 - 5 = 44$."
+      },
+      {
+        q: "Sovuqxonada harorat $-25^\\circ$C edi. Har soatda harorat $4^\\circ$ ga ko'tariladi. $6$ soatdan keyin harorat qancha bo'ladi?",
+        options: ["$-1^\\circ$C", "$-49^\\circ$C", "$1^\\circ$C", "$49^\\circ$C"],
+        correct: 0,
+        explain: "Harorat ortishi: $4 \\cdot 6 = 24^\\circ$. Yangi harorat: $-25 + 24 = -1^\\circ$C."
+      },
+      {
+        q: "Son o'qida $A(-8)$ va $B(10)$ nuqtalar berilgan. $AB$ kesma $3$ ta teng bo'lakka bo'lingan. Birinchi bo'linish nuqtasining koordinatasini toping.",
+        options: ["$-4$", "$-2$", "$0$", "$4$"],
+        correct: 1,
+        explain: "$AB = |10 - (-8)| = 18$. Har bir bo'lak uzunligi $= 18 : 3 = 6$. Birinchi nuqta: $-8 + 6 = -2$."
+      },
+      {
+        q: "Son o'qida $A$ va $B$ nuqtalar $C(2)$ nuqtaga nisbatan simmetrik joylashgan. Agar $A(-3)$ bo'lsa, $B$ nuqtaning koordinatasi:",
+        options: ["$5$", "$7$", "$-7$", "$-5$"],
+        correct: 1,
+        explain: "$C$ — kesma o'rtasi: $2 = \\dfrac{-3 + B}{2} \\Rightarrow -3 + B = 4 \\Rightarrow B = 7$."
+      },
+      {
+        q: "$1 : 500\\,000$ masshtabli xaritada ikki shahar orasidagi masofa $4{,}2$ sm. Haqiqiy masofani km da toping.",
+        options: ["$2{,}1$ km", "$21$ km", "$210$ km", "$2100$ km"],
+        correct: 1,
+        explain: "Haqiqiy masofa $= 4{,}2 \\cdot 500\\,000 = 2\\,100\\,000$ sm $= 21\\,000$ m $= 21$ km."
+      },
+      {
+        q: "Hisoblang: $-1 + 2 - 3 + 4 - 5 + 6 - \\ldots - 99 + 100$",
+        options: ["$-50$", "$0$", "$50$", "$100$"],
+        correct: 2,
+        explain: "Sonlarni juftlab gruppalaymiz: $(-1+2) + (-3+4) + \\ldots + (-99+100)$. Har bir juftlik $= 1$, jami $50$ ta juftlik. Yig'indi: $50 \\cdot 1 = 50$."
+      }
+    ]
+  }
+};
+
+// ============================================================
+// HOLAT
+// ============================================================
+let state = {
+  level: 1,
+  current: 0,
+  answers: [],
+  selectedIndex: null
+};
+
+const screens = {
+  start: document.getElementById('screen-start'),
+  quiz: document.getElementById('screen-quiz'),
+  result: document.getElementById('screen-result')
+};
+
+function showScreen(name) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[name].classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ============================================================
+// QUIZ BOSHLASH
+// ============================================================
+function startQuiz(level) {
+  state.level = level;
+  state.current = 0;
+  state.answers = [];
+  state.selectedIndex = null;
+
+  const colors = {1: '#16A34A', 2: '#F59E0B', 3: '#DC2626'};
+  document.getElementById('levelBadge').style.background = colors[level];
+  document.getElementById('levelBadge').textContent = level;
+  document.getElementById('levelTitle').textContent = QUIZZES[level].title;
+
+  showScreen('quiz');
+  renderQuestion();
+}
+
+// ============================================================
+// SAVOLNI KO'RSATISH
+// ============================================================
+function renderQuestion() {
+  const quiz = QUIZZES[state.level];
+  const qIndex = state.current;
+  const q = quiz.questions[qIndex];
+  state.selectedIndex = null;
+
+  // Progress
+  const progress = ((qIndex) / quiz.questions.length) * 100;
+  document.getElementById('progressFill').style.width = progress + '%';
+  document.getElementById('progressText').textContent = `${qIndex + 1} / ${quiz.questions.length}`;
+
+  // Card content
+  const letters = ['A', 'B', 'C', 'D'];
+  const card = document.getElementById('questionCard');
+  card.classList.remove('pop');
+  void card.offsetWidth; // restart animation
+  card.classList.add('pop');
+
+  card.innerHTML = `
+    <div class="q-number">SAVOL ${qIndex + 1}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="options">
+      ${q.options.map((opt, i) => `
+        <button class="option" data-index="${i}" onclick="selectOption(${i})">
+          <span class="option-letter">${letters[i]}</span>
+          <span class="option-text">${opt}</span>
+          <span class="option-mark"></span>
+        </button>
+      `).join('')}
+    </div>
+    <div class="feedback" id="feedback"></div>
+  `;
+
+  // Render math
+  if (window.renderMathInElement) {
+    renderMathInElement(card, {
+      delimiters: [{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],
+      throwOnError: false
+    });
+  }
+
+  // Disable next button
+  document.getElementById('nextBtn').disabled = true;
+  document.getElementById('nextBtn').textContent = 
+    qIndex === quiz.questions.length - 1 ? "Natijani ko'rish ✓" : "Keyingi savol →";
+}
+
+// ============================================================
+// JAVOB TANLASH
+// ============================================================
+function selectOption(index) {
+  if (state.selectedIndex !== null) return; // already answered
+
+  state.selectedIndex = index;
+  const q = QUIZZES[state.level].questions[state.current];
+  const isCorrect = index === q.correct;
+  state.answers.push({selected: index, correct: q.correct, isCorrect});
+
+  const options = document.querySelectorAll('.option');
+  options.forEach((opt, i) => {
+    opt.disabled = true;
+    if (i === q.correct) {
+      opt.classList.add('correct');
+      opt.querySelector('.option-mark').textContent = '✓';
+    } else if (i === index && !isCorrect) {
+      opt.classList.add('wrong');
+      opt.querySelector('.option-mark').textContent = '✗';
+    }
+  });
+
+  // Feedback
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
+  fb.innerHTML = `
+    <strong>${isCorrect ? '✓ To\'g\'ri javob!' : '✗ Noto\'g\'ri javob'}</strong>
+    <span>${q.explain}</span>
+  `;
+
+  if (window.renderMathInElement) {
+    renderMathInElement(fb, {
+      delimiters: [{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],
+      throwOnError: false
+    });
+  }
+
+  document.getElementById('nextBtn').disabled = false;
+}
+
+// ============================================================
+// KEYINGI SAVOL
+// ============================================================
+function nextQuestion() {
+  const quiz = QUIZZES[state.level];
+  if (state.current < quiz.questions.length - 1) {
+    state.current++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+// ============================================================
+// NATIJA
+// ============================================================
+function showResult() {
+  const quiz = QUIZZES[state.level];
+  const correct = state.answers.filter(a => a.isCorrect).length;
+  const wrong = quiz.questions.length - correct;
+  const percent = Math.round((correct / quiz.questions.length) * 100);
+
+  // Progress to 100%
+  document.getElementById('progressFill').style.width = '100%';
+
+  document.getElementById('finalScore').textContent = correct;
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statWrong').textContent = wrong;
+  document.getElementById('statPercent').textContent = percent + '%';
+
+  // Result message
+  let icon, title, msg;
+  if (percent === 100) {
+    icon = '🏆'; title = 'Mukammal natija!'; msg = "Hammasi to'g'ri! Mavzuni a'lo darajada o'zlashtirgansiz.";
+  } else if (percent >= 80) {
+    icon = '🎉'; title = 'Ajoyib natija!'; msg = "Juda yaxshi ishladingiz. Yana biroz mashq — va mukammal bo'lasiz.";
+  } else if (percent >= 60) {
+    icon = '👍'; title = 'Yaxshi!'; msg = "Asoslarni egallagansiz. Xato bergan savollarni qayta ko'rib chiqing.";
+  } else if (percent >= 40) {
+    icon = '📚'; title = "O'rtacha natija"; msg = "Mavzu ustida yana ishlash kerak. Nazariy qismni qayta o'qing.";
+  } else {
+    icon = '💪'; title = 'Tushkunlikka tushmang!'; msg = "Mavzuni boshidan o'qib, qayta urinib ko'ring. Siz uddalaysiz!";
+  }
+
+  document.getElementById('resultIcon').textContent = icon;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultMessage').textContent = msg;
+
+  // Hide review by default
+  document.getElementById('reviewSection').style.display = 'none';
+
+  showScreen('result');
+}
+
+// ============================================================
+// JAVOBLARNI KO'RIB CHIQISH
+// ============================================================
+function showReview() {
+  const section = document.getElementById('reviewSection');
+  if (section.style.display === 'block') {
+    section.style.display = 'none';
+    return;
+  }
+
+  const quiz = QUIZZES[state.level];
+  const letters = ['A', 'B', 'C', 'D'];
+  const list = document.getElementById('reviewList');
+
+  list.innerHTML = state.answers.map((a, i) => {
+    const q = quiz.questions[i];
+    return `
+      <div class="review-item ${a.isCorrect ? '' : 'wrong'}">
+        <div class="review-item-header">
+          <span class="review-item-num">SAVOL ${i + 1}</span>
+          <span class="review-item-status ${a.isCorrect ? 'correct' : 'wrong'}">
+            ${a.isCorrect ? "✓ To'g'ri" : "✗ Xato"}
+          </span>
+        </div>
+        <div class="review-item-q">${q.q}</div>
+        <div class="review-item-a">
+          Sizning javobingiz: <strong>${letters[a.selected]}) ${q.options[a.selected]}</strong><br>
+          ${a.isCorrect ? '' : `To'g'ri javob: <strong style="color:var(--success)">${letters[q.correct]}) ${q.options[q.correct]}</strong><br>`}
+          <em style="color:var(--text-muted)">${q.explain}</em>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  section.style.display = 'block';
+
+  if (window.renderMathInElement) {
+    renderMathInElement(list, {
+      delimiters: [{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],
+      throwOnError: false
+    });
+  }
+
+  setTimeout(() => section.scrollIntoView({behavior:'smooth', block:'start'}), 100);
+}
+
+// ============================================================
+// CHIQISH
+// ============================================================
+function exitQuiz() {
+  if (screens.quiz.classList.contains('active') && state.current > 0 && state.selectedIndex === null) {
+    if (!confirm('Testni tark etmoqchimisiz? Natijalar saqlanmaydi.')) return;
+  }
+  document.getElementById('reviewSection').style.display = 'none';
+  showScreen('start');
+}
+</script>
+
+</body>
+</html>
